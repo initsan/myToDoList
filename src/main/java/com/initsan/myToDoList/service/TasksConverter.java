@@ -15,6 +15,7 @@ public class TasksConverter {
                 .title(tasksDto.getTitle())
                 .description(tasksDto.getDescription())
                 .createDate(tasksDto.getCreateDate())
+                .rmv(tasksDto.getRmv())
                 .build();
 
     }
@@ -28,6 +29,7 @@ public class TasksConverter {
                 .title(tasks.getTitle())
                 .description(tasks.getDescription())
                 .createDate(tasks.getCreateDate())
+                .rmv(tasks.getRmv())
                 .build();
 
     }

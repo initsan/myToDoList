@@ -1,39 +1,72 @@
 package com.initsan.myToDoList.entity;
 
 import com.initsan.myToDoList.Status;
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tasks")
-@Data
-@Builder
-@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+//@RequiredArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+
 public class Tasks {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    //TODO set default value to column
-    @Column(columnDefinition = "enum('Processing', 'Done') default 'Unknown'")
+    @Column
+    @NotNull
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @Column
+    @NotNull
     private String title;
 
     @Column
     private String description;
 
-    //TODO set default value to column
     @Column
     private LocalDateTime createDate;
 
+    @Column
+    @NotNull
+    private int rmv;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Tasks)) return false;
+        Tasks tasks = (Tasks) o;
+        return status == tasks.status && title.equals(tasks.title) && Objects.equals(description, tasks.description) && Objects.equals(createDate, tasks.createDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(status, title, description, createDate);
+    }
 }

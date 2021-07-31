@@ -15,5 +15,6 @@ public class TasksDto {
     private String title;
     private String description;
     private LocalDateTime createDate;
+    private int rmv;
 
 }
