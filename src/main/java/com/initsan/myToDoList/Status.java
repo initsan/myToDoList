@@ -1,4 +1,4 @@
-package com.initsan.myToDoList.entity;
+package com.initsan.myToDoList;
 
 public enum Status {
     PROCESSING,
