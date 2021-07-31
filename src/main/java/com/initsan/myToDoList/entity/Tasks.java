@@ -1,8 +1,10 @@
 package com.initsan.myToDoList.entity;
 
 import com.initsan.myToDoList.Status;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,6 +13,8 @@ import java.time.LocalDateTime;
 @Table(name = "tasks")
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Tasks {
 
     @Id

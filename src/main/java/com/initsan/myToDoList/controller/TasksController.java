@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("/tasks")
@@ -33,8 +35,13 @@ public class TasksController {
 
     @GetMapping("/findByTitle")
     public TasksDto findByTitle(@RequestParam String title) {
-        log.info(String.format("Searching task by title '%s'", title));
-        return tasksService.findByTitle(title);
+        log.info(String.format("Searching task by title %s", title));
+        var found = tasksService.findByTitle(title);
+        if (!isNull(found)) {
+            log.info(String.format("Founded %s", found));
+            return found;
+        }
+        return null;
     }
 
     @GetMapping("/allTasks")
