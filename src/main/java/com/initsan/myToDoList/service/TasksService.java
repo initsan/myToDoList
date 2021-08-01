@@ -9,7 +9,7 @@ import java.util.List;
 public interface TasksService {
     TasksDto addTask(TasksDto tasksDto) throws ValidationException;
     void removeTask(Integer taskId);
-    TasksDto changeStatus(Status status);
+    TasksDto changeStatus(Integer taskId, Status status);
     TasksDto findByTitle(String title);
     List<TasksDto> getAllTasks();
 }

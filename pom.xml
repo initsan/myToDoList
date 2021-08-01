@@ -14,7 +14,7 @@
 	<name>myToDoList</name>
 	<description>simple ToDo List</description>
 	<properties>
-		<java.version>16</java.version>
+		<java.version>14</java.version>
 	</properties>
 	<dependencies>
 		<dependency>

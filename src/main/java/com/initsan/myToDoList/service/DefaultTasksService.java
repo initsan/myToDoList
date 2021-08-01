@@ -27,8 +27,7 @@ public class DefaultTasksService implements TasksService{
         tasksDto.setStatus(Status.PROCESSING);
         tasksDto.setCreateDate(LocalDateTime.now());
         tasksDto.setRmv(0);
-        Tasks newTask = repository.save(converter.fromTasksDtoToTasks(tasksDto));
-        return converter.fromTasksToTasksDto(newTask);
+        return converter.fromTasksToTasksDto(repository.save(converter.fromTasksDtoToTasks(tasksDto)));
     }
 
     @Override
@@ -43,16 +42,21 @@ public class DefaultTasksService implements TasksService{
     }
 
     @Override
-    public TasksDto changeStatus(Status status) {
-        //TODO change Status method
-        return null;
+    public TasksDto changeStatus(Integer taskId, Status status) {
+        var currentTask = repository.findById(taskId);
+        if (currentTask.isPresent()) {
+            currentTask.get().setStatus(status);
+            return converter.fromTasksToTasksDto(repository.save(currentTask.get()));
+        } else {
+            throw new NullPointerException(String.format("Task %s not found", taskId));
+        }
     }
 
     @Override
     public TasksDto findByTitle(String title) {
-        Tasks task = repository.findByTitle(title);
-        if (!isNull(task)) {
-            return converter.fromTasksToTasksDto(task);
+        Tasks currentTask = repository.findByTitle(title);
+        if (!isNull(currentTask)) {
+            return converter.fromTasksToTasksDto(currentTask);
         }
         return null;
     }

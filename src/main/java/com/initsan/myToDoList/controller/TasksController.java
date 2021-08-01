@@ -1,5 +1,6 @@
 package com.initsan.myToDoList.controller;
 
+import com.initsan.myToDoList.Status;
 import com.initsan.myToDoList.dto.TasksDto;
 import com.initsan.myToDoList.exceptions.ValidationException;
 import com.initsan.myToDoList.service.TasksService;
@@ -39,6 +40,19 @@ public class TasksController {
         try {
             tasksService.removeTask(id);
             return ResponseEntity.ok().build();
+        } catch (NullPointerException npe) {
+            log.severe(String.format("Task %s not found", id));
+            npe.printStackTrace();
+            return ResponseEntity.notFound().build();
+
+        }
+    }
+
+    @PostMapping("/changeStatus")
+    public ResponseEntity<TasksDto> changeStatus(@RequestParam Integer id, Status status) {
+        log.info(String.format("Changing status task %s to %s", id, status));
+        try {
+            return ResponseEntity.ok(tasksService.changeStatus(id, status));
         } catch (NullPointerException npe) {
             log.severe(String.format("Task %s not found", id));
             npe.printStackTrace();
