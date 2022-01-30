@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -60,8 +59,7 @@ public class Tasks {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Tasks)) return false;
-        Tasks tasks = (Tasks) o;
+        if (!(o instanceof Tasks tasks)) return false;
         return status == tasks.status && title.equals(tasks.title) && Objects.equals(description, tasks.description) && Objects.equals(createDate, tasks.createDate);
     }
 
