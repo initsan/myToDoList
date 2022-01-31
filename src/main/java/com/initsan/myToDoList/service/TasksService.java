@@ -19,10 +19,10 @@ import static java.util.Objects.isNull;
 public class TasksService {
 
     private final TasksRepository repository;
-    private final TasksConverter converter;
+    private final TaskMapper converter;
 
     @Autowired
-    public TasksService(TasksRepository repository, TasksConverter converter) {
+    public TasksService(TasksRepository repository, TaskMapper converter) {
         this.repository = repository;
         this.converter = converter;
     }
