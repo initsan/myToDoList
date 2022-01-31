@@ -1,8 +1,10 @@
 package com.initsan.myToDoList.repository;
 
-import com.initsan.myToDoList.entity.Tasks;
+import com.initsan.myToDoList.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TasksRepository extends JpaRepository<Tasks, Integer> {
-    Tasks findByTitle(String title);
+import java.util.Optional;
+
+public interface TasksRepository extends JpaRepository<Task, Integer> {
+    Optional<Task> findByTitle(String title);
 }

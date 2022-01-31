@@ -1,6 +1,6 @@
 package com.initsan.myToDoList.dto;
 
-import com.initsan.myToDoList.Status;
+import com.initsan.myToDoList.dictionary.Status;
 import lombok.Builder;
 import lombok.Data;
 

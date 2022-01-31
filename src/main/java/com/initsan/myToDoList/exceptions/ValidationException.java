@@ -1,6 +1,6 @@
 package com.initsan.myToDoList.exceptions;
 
-public class ValidationException extends Exception {
+public class ValidationException extends RuntimeException {
 
     private final String message;
 

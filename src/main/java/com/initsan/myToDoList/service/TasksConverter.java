@@ -1,15 +1,15 @@
 package com.initsan.myToDoList.service;
 
 import com.initsan.myToDoList.dto.TasksDto;
-import com.initsan.myToDoList.entity.Tasks;
+import com.initsan.myToDoList.entity.Task;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TasksConverter {
 
-    public Tasks fromTasksDtoToTasks(TasksDto tasksDto) {
+    public Task taskDtoToTask(TasksDto tasksDto) {
 
-        return Tasks.builder()
+        return Task.builder()
                 .id(tasksDto.getId())
                 .status(tasksDto.getStatus())
                 .title(tasksDto.getTitle())
@@ -20,16 +20,16 @@ public class TasksConverter {
 
     }
 
-    public TasksDto fromTasksToTasksDto(Tasks tasks) {
+    public TasksDto taskToTaskDto(Task task) {
 
         return TasksDto.builder()
-                .id(tasks.getId())
-                .status(tasks.getStatus())
-                .status(tasks.getStatus())
-                .title(tasks.getTitle())
-                .description(tasks.getDescription())
-                .createDate(tasks.getCreateDate())
-                .rmv(tasks.getRmv())
+                .id(task.getId())
+                .status(task.getStatus())
+                .status(task.getStatus())
+                .title(task.getTitle())
+                .description(task.getDescription())
+                .createDate(task.getCreateDate())
+                .rmv(task.getRmv())
                 .build();
 
     }

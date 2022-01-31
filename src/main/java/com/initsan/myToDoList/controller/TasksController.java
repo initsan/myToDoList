@@ -1,12 +1,13 @@
 package com.initsan.myToDoList.controller;
 
-import com.initsan.myToDoList.Status;
+import com.initsan.myToDoList.dictionary.Status;
 import com.initsan.myToDoList.dto.TasksDto;
 import com.initsan.myToDoList.exceptions.ValidationException;
 import com.initsan.myToDoList.service.TasksService;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import static java.util.Objects.isNull;
 
 @AllArgsConstructor
 @RestController
+@ControllerAdvice
 @RequestMapping("/tasks")
 @Log
 public class TasksController {
