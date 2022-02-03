@@ -7,6 +7,7 @@ import com.initsan.myToDoList.service.TasksService;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ import static java.util.Objects.isNull;
 @RestController
 @ControllerAdvice
 @RequestMapping("/tasks")
+@Transactional(timeout = 120)
 @Log
 public class TasksController {
 
