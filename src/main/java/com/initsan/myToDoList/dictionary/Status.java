@@ -1,4 +1,4 @@
-package com.initsan.myToDoList;
+package com.initsan.myToDoList.dictionary;
 
 import lombok.Getter;
 
