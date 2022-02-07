@@ -35,7 +35,7 @@ public class TasksService {
         return converter.taskToTaskDto(repository.save(converter.taskDtoToTask(tasksDto)));
     }
 
-    public void removeTask(Integer taskId) {
+    public void removeTask(Long taskId) {
         var currentTask = repository.findById(taskId);
         if (currentTask.isPresent()) {
             currentTask.get().setRmv(1);
@@ -45,7 +45,7 @@ public class TasksService {
         }
     }
 
-    public TasksDto changeStatus(Integer taskId, Status status) {
+    public TasksDto changeStatus(Long taskId, Status status) {
         var currentTask = repository.findById(taskId);
         if (currentTask.isPresent()) {
             currentTask.get().setStatus(status);

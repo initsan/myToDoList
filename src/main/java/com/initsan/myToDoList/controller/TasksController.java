@@ -39,7 +39,7 @@ public class TasksController {
     }
 
     @DeleteMapping("/remove/{id}")
-    public ResponseEntity<Void> removeTask(@PathVariable Integer id) {
+    public ResponseEntity<Void> removeTask(@PathVariable Long id) {
         log.info(String.format("Remove task: %s", id));
         try {
             tasksService.removeTask(id);
@@ -53,7 +53,7 @@ public class TasksController {
     }
 
     @PostMapping("/changeStatus")
-    public ResponseEntity<TasksDto> changeStatus(@RequestParam Integer id, Status status) {
+    public ResponseEntity<TasksDto> changeStatus(@RequestParam Long id, Status status) {
         log.info(String.format("Changing status task %s to %s", id, status));
         try {
             return ResponseEntity.ok(tasksService.changeStatus(id, status));
