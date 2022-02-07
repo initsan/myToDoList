@@ -1,6 +1,5 @@
 package com.initsan.myToDoList.entity;
 
-import com.initsan.myToDoList.dictionary.Status;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,20 +9,16 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Where;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "tasks")
+@Table(name = "users")
 @Getter
 @Setter
 @ToString
@@ -31,40 +26,39 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Where(clause = "rmv = 0")
-public class Task {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column
     @NotNull
-    @Enumerated(EnumType.STRING)
-    private Status status;
+    private String username;
+
+    @Column(unique = true)
+    @NotNull
+    private String login;
 
     @Column
     @NotNull
-    private String title;
-
-    @Column
-    private String description;
-
-    @Column
-    private LocalDateTime createDate;
+    private String password;
 
     @Column
     @NotNull
     private int rmv;
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Task task)) return false;
-        return status == task.status && title.equals(task.title) && Objects.equals(description, task.description) && Objects.equals(createDate, task.createDate);
+    public int hashCode() {
+        return Objects.hash(login);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(status, title, description, createDate);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return login.equals(user.login);
+
     }
 }
