@@ -35,8 +35,8 @@ public class TasksService {
         return converter.taskToTaskDto(repository.save(converter.taskDtoToTask(tasksDto)));
     }
 
-    public void removeTask(Long taskId) {
-        var currentTask = repository.findById(taskId);
+    public void removeTask(Integer taskId) {
+        var currentTask = repository.findById(Long.valueOf(taskId));
         if (currentTask.isPresent()) {
             currentTask.get().setRmv(1);
             repository.save(currentTask.get());
@@ -45,8 +45,8 @@ public class TasksService {
         }
     }
 
-    public TasksDto changeStatus(Long taskId, Status status) {
-        var currentTask = repository.findById(taskId);
+    public TasksDto changeStatus(Integer taskId, Status status) {
+        var currentTask = repository.findById(Long.valueOf(taskId));
         if (currentTask.isPresent()) {
             currentTask.get().setStatus(status);
             return converter.taskToTaskDto(repository.save(currentTask.get()));
