@@ -18,4 +18,5 @@ public class MyToDoListApplication {
 		return new BCryptPasswordEncoder();
 	}
 
+
 }

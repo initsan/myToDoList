@@ -1,8 +1,10 @@
 package com.initsan.myToDoList.repository;
 
-import com.initsan.myToDoList.entity.User;
+import com.initsan.myToDoList.entity.UserData;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByLogin(String login);
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<UserData, Long> {
+    Optional<UserData> findByLogin(String login);
 }
