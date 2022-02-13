@@ -1,6 +1,5 @@
 package com.initsan.myToDoList.entity;
 
-import com.initsan.myToDoList.dictionary.Status;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
