@@ -57,6 +57,10 @@ public class Task {
     @NotNull
     private int rmv;
 
+    @Column(name = "user_id", nullable = false)
+    @NotNull
+    private Long userId;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

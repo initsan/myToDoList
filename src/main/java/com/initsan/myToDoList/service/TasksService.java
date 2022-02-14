@@ -31,6 +31,7 @@ public class TasksService {
         validateTaskDto(tasksDto);
         tasksDto.setStatus(Status.PROCESSING);
         tasksDto.setCreateDate(LocalDateTime.now());
+        tasksDto.setUserId(2L);
         tasksDto.setRmv(0);
         return converter.taskToTaskDto(repository.save(converter.taskDtoToTask(tasksDto)));
     }

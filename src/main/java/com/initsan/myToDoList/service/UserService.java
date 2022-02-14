@@ -33,6 +33,6 @@ public class UserService implements UserDetailsService {
 
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
         UserData user = userData.get();
-        return new User(user.getUsername(), user.getPassword(), authorities);
+        return new User(user.getLogin(), user.getPassword(), authorities);
     }
 }

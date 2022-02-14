@@ -24,5 +24,6 @@ public class TasksDto {
     private String description;
     private LocalDateTime createDate;
     private int rmv;
+    private Long userId;
 
 }
