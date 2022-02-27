@@ -1,6 +1,5 @@
 package com.initsan.myToDoList.entity;
 
-import com.initsan.myToDoList.dictionary.Status;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,20 +9,16 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Where;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "tasks")
+@Table(name = "lists")
 @Getter
 @Setter
 @ToString
@@ -31,7 +26,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Where(clause = "rmv = 0")
-public class Task {
+public class TList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,18 +35,7 @@ public class Task {
 
     @Column
     @NotNull
-    @Enumerated(EnumType.STRING)
-    private Status status;
-
-    @Column
-    @NotNull
-    private String title;
-
-    @Column
-    private String description;
-
-    @Column
-    private LocalDateTime createDate;
+    private String name;
 
     @Column
     @NotNull
@@ -64,15 +48,13 @@ public class Task {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Task task)) return false;
-        return status == task.status && title.equals(task.title)
-                && Objects.equals(description, task.description)
-                && Objects.equals(createDate, task.createDate)
-                && Objects.equals(userId, task.userId);
+        if (!(o instanceof TList tList)) return false;
+        return name.equals(tList.name) && userId.equals(tList.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(status, title, description, createDate, userId);
+        return Objects.hash(name, userId);
     }
+
 }

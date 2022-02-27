@@ -1,10 +1,8 @@
 package com.initsan.myToDoList.service;
 
 import com.initsan.myToDoList.dictionary.Status;
-import com.initsan.myToDoList.dto.TasksDto;
+import com.initsan.myToDoList.dto.TaskDto;
 import com.initsan.myToDoList.entity.Task;
-import com.initsan.myToDoList.entity.UserData;
-import com.initsan.myToDoList.exceptions.UserNotFoundException;
 import com.initsan.myToDoList.exceptions.ValidationException;
 import com.initsan.myToDoList.repository.TasksRepository;
 import com.initsan.myToDoList.repository.UserRepository;
@@ -32,17 +30,17 @@ public class TasksService {
         this.userRepository = userRepository;
     }
 
-    public TasksDto addTask(TasksDto tasksDto, String userLogin) throws ValidationException {
-        validateTaskDto(tasksDto);
-        tasksDto.setStatus(Status.PROCESSING);
-        tasksDto.setCreateDate(LocalDateTime.now());
-        tasksDto.setUserId(getUserId(userLogin));
-        tasksDto.setRmv(0);
-        return converter.taskToTaskDto(repository.save(converter.taskDtoToTask(tasksDto)));
+    public TaskDto addTask(TaskDto taskDto, String userLogin) throws ValidationException {
+        validateTaskDto(taskDto);
+        taskDto.setStatus(Status.PROCESSING);
+        taskDto.setCreateDate(LocalDateTime.now());
+        taskDto.setUserId(userRepository.getUserId(userLogin));
+        taskDto.setRmv(0);
+        return converter.taskToTaskDto(repository.save(converter.taskDtoToTask(taskDto)));
     }
 
     public void removeTask(Long taskId, String userLogin) {
-        var currentTask = repository.findByIdAndUserId(taskId, getUserId(userLogin));
+        var currentTask = repository.findByIdAndUserId(taskId, userRepository.getUserId(userLogin));
         if (currentTask.isPresent()) {
             currentTask.get().setRmv(1);
             repository.save(currentTask.get());
@@ -51,8 +49,8 @@ public class TasksService {
         }
     }
 
-    public TasksDto changeStatus(Long taskId, Status status, String userLogin) {
-        var currentTask = repository.findByIdAndUserId(taskId, getUserId(userLogin));
+    public TaskDto changeStatus(Long taskId, Status status, String userLogin) {
+        var currentTask = repository.findByIdAndUserId(taskId, userRepository.getUserId(userLogin));
         if (currentTask.isPresent()) {
             currentTask.get().setStatus(status);
             return converter.taskToTaskDto(repository.save(currentTask.get()));
@@ -61,14 +59,14 @@ public class TasksService {
         }
     }
 
-    public TasksDto findByTitle(String title, String userLogin) {
-        Optional<Task> currentTask = repository.findByTitleAndUserId(title, getUserId(userLogin));
+    public TaskDto findByTitle(String title, String userLogin) {
+        Optional<Task> currentTask = repository.findByTitleAndUserId(title, userRepository.getUserId(userLogin));
         return currentTask.map(converter::taskToTaskDto).orElse(null);
 
     }
 
-    public List<TasksDto> getAllTasks(String userLogin) {
-        Optional<List<Task>> result = repository.findTasksByUserId(getUserId(userLogin));
+    public List<TaskDto> getAllTasks(String userLogin) {
+        Optional<List<Task>> result = repository.findTasksByUserId(userRepository.getUserId(userLogin));
         if (result.isEmpty()) {
             return null;
         }
@@ -79,21 +77,13 @@ public class TasksService {
                 .collect(Collectors.toList());
     }
 
-    private void validateTaskDto(TasksDto tasksDto) throws ValidationException {
-        if (isNull(tasksDto)) {
+    private void validateTaskDto(TaskDto taskDto) throws ValidationException {
+        if (isNull(taskDto)) {
             throw new ValidationException("Object task is null");
         }
-        if (isNull(tasksDto.getTitle())) {
+        if (isNull(taskDto.getTitle())) {
             throw new ValidationException("Title is empty");
         }
-    }
-
-    private Long getUserId(String userLogin) {
-        Optional<UserData> userData = userRepository.findByLogin(userLogin);
-        if (userData.isEmpty()) {
-            throw new UserNotFoundException();
-        }
-        return userData.get().getId();
     }
 
 }

@@ -3,7 +3,10 @@ package com.initsan.myToDoList.service;
 import com.initsan.myToDoList.entity.UserData;
 import com.initsan.myToDoList.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -35,4 +38,14 @@ public class UserService implements UserDetailsService {
         UserData user = userData.get();
         return new User(user.getLogin(), user.getPassword(), authorities);
     }
+
+    public Optional<String> getUserLogin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Optional<String> currentUserName = Optional.empty();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            currentUserName = Optional.ofNullable(authentication.getName());
+        }
+        return currentUserName;
+    }
+
 }

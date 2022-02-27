@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TasksDto {
+public class TaskDto {
 
     private Long id;
     private Status status;
