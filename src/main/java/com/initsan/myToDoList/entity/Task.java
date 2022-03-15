@@ -35,7 +35,8 @@ public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id", nullable = false)
+    private Long id;
 
     @Column
     @NotNull
@@ -55,6 +56,10 @@ public class Task {
     @Column
     @NotNull
     private int rmv;
+
+    @Column(name = "user_id", nullable = false)
+    @NotNull
+    private Long userId;
 
     @Override
     public boolean equals(Object o) {

@@ -18,11 +18,12 @@ import java.time.LocalDateTime;
 @Builder
 public class TasksDto {
 
-    private Integer id;
+    private Long id;
     private Status status;
     private String title;
     private String description;
     private LocalDateTime createDate;
     private int rmv;
+    private Long userId;
 
 }
