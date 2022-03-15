@@ -17,7 +17,6 @@ public class ListTaskServise {
     private final TListRepository tListRepository;
     private final TasksRepository tasksRepository;
     private final UserRepository userRepository;
-    private final TListService tListService;
 
     @Autowired
     public ListTaskServise(ListTaskRepository listTaskRepository,
@@ -29,7 +28,6 @@ public class ListTaskServise {
         this.tListRepository = tListRepository;
         this.tasksRepository = tasksRepository;
         this.userRepository = userRepository;
-        this.tListService = tListService;
     }
 
     public boolean addTaskToList(Long listId, Long taskId, String userLogin) {

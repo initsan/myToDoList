@@ -2,7 +2,6 @@ package com.initsan.myToDoList.controller;
 
 import com.initsan.myToDoList.dto.TListDto;
 import com.initsan.myToDoList.dto.TaskDto;
-import com.initsan.myToDoList.exceptions.ListNotFoundException;
 import com.initsan.myToDoList.service.ListTaskServise;
 import com.initsan.myToDoList.service.TListService;
 import com.initsan.myToDoList.service.UserService;

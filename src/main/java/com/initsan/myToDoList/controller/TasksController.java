@@ -2,7 +2,6 @@ package com.initsan.myToDoList.controller;
 
 import com.initsan.myToDoList.dictionary.Status;
 import com.initsan.myToDoList.dto.TaskDto;
-import com.initsan.myToDoList.exceptions.TaskNotFoundException;
 import com.initsan.myToDoList.exceptions.ValidationException;
 import com.initsan.myToDoList.service.TasksService;
 import com.initsan.myToDoList.service.UserService;
