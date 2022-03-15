@@ -2,6 +2,7 @@ package com.initsan.myToDoList.controller;
 
 import com.initsan.myToDoList.dictionary.Status;
 import com.initsan.myToDoList.dto.TaskDto;
+import com.initsan.myToDoList.exceptions.TaskNotFoundException;
 import com.initsan.myToDoList.exceptions.ValidationException;
 import com.initsan.myToDoList.service.TasksService;
 import com.initsan.myToDoList.service.UserService;
@@ -48,14 +49,8 @@ public class TasksController {
         var userLogin = userService.getUserLogin();
         if (userLogin.isPresent()) {
             log.info(String.format("Remove task: %s", id));
-            try {
-                tasksService.removeTask(id, userLogin.get());
-                return ResponseEntity.ok().build();
-            } catch (NullPointerException npe) {
-                log.severe(String.format("Task %s not found", id));
-                npe.printStackTrace();
-                return ResponseEntity.notFound().build();
-            }
+            tasksService.removeTask(id, userLogin.get());
+            return ResponseEntity.ok().build();
         } return ResponseEntity.notFound().build();
     }
 
@@ -64,13 +59,7 @@ public class TasksController {
         var userLogin = userService.getUserLogin();
         if (userLogin.isPresent()) {
             log.info(String.format("Changing status task %s to %s", id, status));
-            try {
-                return ResponseEntity.ok(tasksService.changeStatus(id, status, userLogin.get()));
-            } catch (NullPointerException npe) {
-                log.severe(String.format("Task %s not found", id));
-                npe.printStackTrace();
-                return ResponseEntity.notFound().build();
-            }
+            return ResponseEntity.ok(tasksService.changeStatus(id, status, userLogin.get()));
         } return ResponseEntity.notFound().build();
     }
 
@@ -82,9 +71,6 @@ public class TasksController {
             var found = tasksService.findByTitle(title, userLogin.get());
             if (!isNull(found)) {
                 log.info(String.format("Founded %s", found));
-                if (found.getRmv() == 1) {
-                    return ResponseEntity.noContent().build();
-                }
                 return ResponseEntity.ok(found);
             }
         }

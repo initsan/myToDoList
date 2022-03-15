@@ -2,6 +2,7 @@ package com.initsan.myToDoList.controller;
 
 import com.initsan.myToDoList.dto.TListDto;
 import com.initsan.myToDoList.dto.TaskDto;
+import com.initsan.myToDoList.exceptions.ListNotFoundException;
 import com.initsan.myToDoList.service.ListTaskServise;
 import com.initsan.myToDoList.service.TListService;
 import com.initsan.myToDoList.service.UserService;
@@ -49,14 +50,8 @@ public class TListController {
         var userLogin = userService.getUserLogin();
         if (userLogin.isPresent()) {
             log.info(String.format("Remove list: %s", id));
-            try {
-                tListService.removeTaskList(id, userLogin.get());
-                return ResponseEntity.ok().build();
-            } catch (NullPointerException npe) {
-                log.severe(String.format("List %s not found", id));
-                npe.printStackTrace();
-                return ResponseEntity.notFound().build();
-            }
+            tListService.removeTaskList(id, userLogin.get());
+            return ResponseEntity.ok().build();
         } return ResponseEntity.notFound().build();
     }
 
@@ -68,9 +63,6 @@ public class TListController {
             var found = tListService.findList(listName, userLogin.get());
             if (!isNull(found)) {
                 log.info(String.format("Founded %s", found));
-                if (found.getRmv() == 1) {
-                    return ResponseEntity.noContent().build();
-                }
                 return ResponseEntity.ok(found);
             }
         }

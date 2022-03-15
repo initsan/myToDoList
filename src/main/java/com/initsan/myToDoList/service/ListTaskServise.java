@@ -67,8 +67,9 @@ public class ListTaskServise {
         if (listSource.isPresent() && listResult.isPresent()) {
             if (Objects.equals(listSource.get().getUserId(), userId) && Objects.equals(listResult.get().getUserId(), userId)) {
                 var resList = listTaskRepository.findListTasksByListId(listSource.get().getId());
-                if (resList.isPresent()) {
-                    resList.get().forEach(listTask -> {
+                if (!resList.isEmpty()) {
+                    // TO DO сделать метод в репозитории, чтобы сразу за один запрос ставил нужным таскам новый лист
+                    resList.forEach(listTask -> {
                         listTask.setListId(listResult.get().getId());
                         listTaskRepository.save(listTask);
                     });

@@ -4,6 +4,7 @@ import com.initsan.myToDoList.dto.TListDto;
 import com.initsan.myToDoList.dto.TaskDto;
 import com.initsan.myToDoList.entity.ListTask;
 import com.initsan.myToDoList.entity.TList;
+import com.initsan.myToDoList.exceptions.ListNotFoundException;
 import com.initsan.myToDoList.exceptions.ValidationException;
 import com.initsan.myToDoList.repository.ListTaskRepository;
 import com.initsan.myToDoList.repository.TListRepository;
@@ -40,20 +41,19 @@ public class TListService {
     }
 
 
-    public TListDto addTList(TListDto tListDto, String userLogin) {
+    public TListDto addTList(TListDto tListDto, String userLogin) throws ValidationException{
         validateTListDto(tListDto);
         tListDto.setUserId(userRepository.getUserId(userLogin));
-        tListDto.setRmv(0);
         return mapper.tListToTListDto(repository.save(mapper.tListDtoToTList(tListDto)));
     }
 
-    public void removeTaskList(Long tListId, String userLogin) {
+    public void removeTaskList(Long tListId, String userLogin) throws ListNotFoundException{
         var currentTaskList = repository.findByIdAndUserId(tListId, userRepository.getUserId(userLogin));
         if (currentTaskList.isPresent()) {
             currentTaskList.get().setRmv(1);
             repository.save(currentTaskList.get());
         } else {
-            throw new NullPointerException(String.format("List %s not found for user%s", tListId, userLogin));
+            throw new ListNotFoundException(String.format("List %s not found for user%s", tListId, userLogin));
         }
     }
 
@@ -63,24 +63,25 @@ public class TListService {
     }
 
     public List<TListDto> getAllTLists(String userLogin) {
-        Optional<List<TList>> result = repository.findTListsByUserId(userRepository.getUserId(userLogin));
+        List<TList> result = repository.findTListsByUserId(userRepository.getUserId(userLogin));
         if (result.isEmpty()) {
             return null;
         }
-        return result.get()
+        return result
                 .stream()
-                .filter(task -> task.getRmv() != 1)
                 .map(mapper::tListToTListDto)
                 .collect(Collectors.toList());
     }
 
     public List<TaskDto> getListTask(Long listId, String userLogin) {
         ArrayList<TaskDto> lListTaskResult = new ArrayList<>();
-        Optional<List<ListTask>> lt = listTaskRepository.findListTasksByListId(listId);
-        lt.ifPresent(listTasks -> listTasks.forEach(t -> {
-            var task = tasksRepository.findByIdAndUserId(t.getTaskId(), userRepository.getUserId(userLogin));
-            task.ifPresent(value -> lListTaskResult.add(taskMapper.taskToTaskDto(value)));
-        }));
+        List<ListTask> lt = listTaskRepository.findListTasksByListId(listId);
+        if (!lt.isEmpty()) {
+            lt.forEach(t -> {
+                var task = tasksRepository.findByIdAndUserId(t.getTaskId(), userRepository.getUserId(userLogin));
+                task.ifPresent(value -> lListTaskResult.add(taskMapper.taskToTaskDto(value)));
+            });
+        }
         return lListTaskResult;
     }
 

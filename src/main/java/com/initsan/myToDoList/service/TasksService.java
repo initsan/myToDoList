@@ -3,6 +3,7 @@ package com.initsan.myToDoList.service;
 import com.initsan.myToDoList.dictionary.Status;
 import com.initsan.myToDoList.dto.TaskDto;
 import com.initsan.myToDoList.entity.Task;
+import com.initsan.myToDoList.exceptions.TaskNotFoundException;
 import com.initsan.myToDoList.exceptions.ValidationException;
 import com.initsan.myToDoList.repository.TasksRepository;
 import com.initsan.myToDoList.repository.UserRepository;
@@ -35,27 +36,26 @@ public class TasksService {
         taskDto.setStatus(Status.PROCESSING);
         taskDto.setCreateDate(LocalDateTime.now());
         taskDto.setUserId(userRepository.getUserId(userLogin));
-        taskDto.setRmv(0);
         return converter.taskToTaskDto(repository.save(converter.taskDtoToTask(taskDto)));
     }
 
-    public void removeTask(Long taskId, String userLogin) {
+    public void removeTask(Long taskId, String userLogin) throws TaskNotFoundException{
         var currentTask = repository.findByIdAndUserId(taskId, userRepository.getUserId(userLogin));
         if (currentTask.isPresent()) {
             currentTask.get().setRmv(1);
             repository.save(currentTask.get());
         } else {
-            throw new NullPointerException(String.format("Task %s not found for user%s", taskId, userLogin));
+            throw new TaskNotFoundException(String.format("Task %s not found for user%s", taskId, userLogin));
         }
     }
 
-    public TaskDto changeStatus(Long taskId, Status status, String userLogin) {
+    public TaskDto changeStatus(Long taskId, Status status, String userLogin) throws TaskNotFoundException{
         var currentTask = repository.findByIdAndUserId(taskId, userRepository.getUserId(userLogin));
         if (currentTask.isPresent()) {
             currentTask.get().setStatus(status);
             return converter.taskToTaskDto(repository.save(currentTask.get()));
         } else {
-            throw new NullPointerException(String.format("Task %s not found for user %s", taskId, userLogin));
+            throw new TaskNotFoundException(String.format("Task %s not found for user %s", taskId, userLogin));
         }
     }
 
@@ -66,13 +66,12 @@ public class TasksService {
     }
 
     public List<TaskDto> getAllTasks(String userLogin) {
-        Optional<List<Task>> result = repository.findTasksByUserId(userRepository.getUserId(userLogin));
+        List<Task> result = repository.findTasksByUserId(userRepository.getUserId(userLogin));
         if (result.isEmpty()) {
             return null;
         }
-        return result.get()
+        return result
                 .stream()
-                .filter(task -> task.getRmv() != 1)
                 .map(converter::taskToTaskDto)
                 .collect(Collectors.toList());
     }
