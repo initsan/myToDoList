@@ -42,8 +42,7 @@ public class TasksService {
     public void removeTask(Long taskId, String userLogin) throws TaskNotFoundException{
         var currentTask = repository.findByIdAndUserId(taskId, userRepository.getUserId(userLogin));
         if (currentTask.isPresent()) {
-            currentTask.get().setRmv(1);
-            repository.save(currentTask.get());
+            repository.delete(currentTask.get());
         } else {
             throw new TaskNotFoundException(String.format("Task %s not found for user%s", taskId, userLogin));
         }

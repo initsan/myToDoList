@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
@@ -26,6 +28,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Where(clause = "rmv = 0")
+@SQLDelete(sql = "UPDATE lists SET rmv = 1 WHERE id = ?", check = ResultCheckStyle.COUNT)
 public class TList {
 
     @Id
