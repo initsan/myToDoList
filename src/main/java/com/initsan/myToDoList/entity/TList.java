@@ -6,24 +6,25 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "lists")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -48,6 +49,9 @@ public class TList {
     @NotNull
     private Long userId;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Task> tasks;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -60,4 +64,12 @@ public class TList {
         return Objects.hash(name, userId);
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "name = " + name + ", " +
+                "rmv = " + rmv + ", " +
+                "userId = " + userId + ")";
+    }
 }

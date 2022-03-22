@@ -2,13 +2,10 @@ package com.initsan.myToDoList.service;
 
 import com.initsan.myToDoList.dto.TListDto;
 import com.initsan.myToDoList.dto.TaskDto;
-import com.initsan.myToDoList.entity.ListTask;
 import com.initsan.myToDoList.entity.TList;
 import com.initsan.myToDoList.exceptions.ListNotFoundException;
 import com.initsan.myToDoList.exceptions.ValidationException;
-import com.initsan.myToDoList.repository.ListTaskRepository;
 import com.initsan.myToDoList.repository.TListRepository;
-import com.initsan.myToDoList.repository.TasksRepository;
 import com.initsan.myToDoList.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,17 +23,13 @@ public class TListService {
     private final TListRepository repository;
     private final TListMapper mapper;
     private final UserRepository userRepository;
-    private final TasksRepository tasksRepository;
-    private final ListTaskRepository listTaskRepository;
     private final TaskMapper taskMapper;
 
     @Autowired
-    public TListService(TListRepository repository, TListMapper mapper, UserRepository userRepository, TasksRepository tasksRepository, ListTaskRepository listTaskRepository, TaskMapper taskMapper) {
+    public TListService(TListRepository repository, TListMapper mapper, UserRepository userRepository, TaskMapper taskMapper) {
         this.repository = repository;
         this.mapper = mapper;
         this.userRepository = userRepository;
-        this.tasksRepository = tasksRepository;
-        this.listTaskRepository = listTaskRepository;
         this.taskMapper = taskMapper;
     }
 
@@ -50,8 +43,7 @@ public class TListService {
     public void removeTaskList(Long tListId, String userLogin) throws ListNotFoundException{
         var currentTaskList = repository.findByIdAndUserId(tListId, userRepository.getUserId(userLogin));
         if (currentTaskList.isPresent()) {
-            currentTaskList.get().setRmv(1);
-            repository.save(currentTaskList.get());
+            repository.delete(currentTaskList.get());
         } else {
             throw new ListNotFoundException(String.format("List %s not found for user%s", tListId, userLogin));
         }
@@ -74,15 +66,13 @@ public class TListService {
     }
 
     public List<TaskDto> getListTask(Long listId, String userLogin) {
-        ArrayList<TaskDto> lListTaskResult = new ArrayList<>();
-        List<ListTask> lt = listTaskRepository.findListTasksByListId(listId);
-        if (!lt.isEmpty()) {
-            lt.forEach(t -> {
-                var task = tasksRepository.findByIdAndUserId(t.getTaskId(), userRepository.getUserId(userLogin));
-                task.ifPresent(value -> lListTaskResult.add(taskMapper.taskToTaskDto(value)));
-            });
-        }
-        return lListTaskResult;
+        Long userId = userRepository.getUserId(userLogin);
+        List<TaskDto> listTaskResult = new ArrayList<>();
+        var resultList = repository.findByIdAndUserId(listId, userId);
+        resultList.ifPresent(tList -> tList.getTasks().forEach(task -> {
+            listTaskResult.add(taskMapper.taskToTaskDto(task));
+        }));
+        return listTaskResult;
     }
 
     private void validateTListDto(TListDto tListDto) throws ValidationException {

@@ -1,7 +1,6 @@
 package com.initsan.myToDoList.service;
 
-import com.initsan.myToDoList.entity.ListTask;
-import com.initsan.myToDoList.repository.ListTaskRepository;
+import com.initsan.myToDoList.entity.TList;
 import com.initsan.myToDoList.repository.TListRepository;
 import com.initsan.myToDoList.repository.TasksRepository;
 import com.initsan.myToDoList.repository.UserRepository;
@@ -13,31 +12,29 @@ import java.util.Objects;
 @Service
 public class ListTaskServise {
 
-    private final ListTaskRepository listTaskRepository;
     private final TListRepository tListRepository;
     private final TasksRepository tasksRepository;
     private final UserRepository userRepository;
 
     @Autowired
-    public ListTaskServise(ListTaskRepository listTaskRepository,
-                           TListRepository tListRepository,
+    public ListTaskServise(TListRepository tListRepository,
                            TasksRepository tasksRepository,
-                           UserRepository userRepository,
-                           TListService tListService) {
-        this.listTaskRepository = listTaskRepository;
+                           UserRepository userRepository) {
         this.tListRepository = tListRepository;
         this.tasksRepository = tasksRepository;
         this.userRepository = userRepository;
     }
 
     public boolean addTaskToList(Long listId, Long taskId, String userLogin) {
-        ListTask result = null;
+        TList result = null;
         var list = tListRepository.findById(listId);
         var task = tasksRepository.findById(taskId);
         Long userId = userRepository.getUserId(userLogin);
         if (list.isPresent() && task.isPresent()) {
             if (Objects.equals(task.get().getUserId(), userId) && Objects.equals(list.get().getUserId(), userId)) {
-                result = listTaskRepository.save(new ListTask(listId, taskId));
+                var listResult = list.get();
+                listResult.getTasks().add(task.get());
+                result = tListRepository.save(listResult);
             }
         }
         return result != null;
@@ -46,11 +43,12 @@ public class ListTaskServise {
     public boolean removeTaskFromList(Long listId, Long taskId, String userLogin) {
         var list = tListRepository.findById(listId);
         var task = tasksRepository.findById(taskId);
-        var listTask = listTaskRepository.findByListIdAndTaskId(listId, taskId);
         Long userId = userRepository.getUserId(userLogin);
-        if (list.isPresent() && task.isPresent() && listTask.isPresent()) {
+        if (list.isPresent() && task.isPresent()) {
             if (Objects.equals(task.get().getUserId(), userId) && Objects.equals(list.get().getUserId(), userId)) {
-                listTaskRepository.delete(listTask.get());
+                var listResult = list.get();
+                listResult.getTasks().remove(task.get());
+                tListRepository.save(listResult);
                 return true;
             }
         }
@@ -64,15 +62,11 @@ public class ListTaskServise {
 
         if (listSource.isPresent() && listResult.isPresent()) {
             if (Objects.equals(listSource.get().getUserId(), userId) && Objects.equals(listResult.get().getUserId(), userId)) {
-                var resList = listTaskRepository.findListTasksByListId(listSource.get().getId());
-                if (!resList.isEmpty()) {
-                    // TO DO сделать метод в репозитории, чтобы сразу за один запрос ставил нужным таскам новый лист
-                    resList.forEach(listTask -> {
-                        listTask.setListId(listResult.get().getId());
-                        listTaskRepository.save(listTask);
-                    });
-                    return listResultId;
-                }
+                var source = listSource.get().getTasks();
+                var result = listResult.get();
+                result.getTasks().addAll(source);
+                tListRepository.save(result);
+                return result.getId();
             }
         }
         return null;

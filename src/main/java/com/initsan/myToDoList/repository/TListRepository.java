@@ -1,6 +1,7 @@
 package com.initsan.myToDoList.repository;
 
 import com.initsan.myToDoList.entity.TList;
+import com.initsan.myToDoList.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -10,4 +11,5 @@ public interface TListRepository extends JpaRepository<TList, Long> {
     Optional<TList> findByIdAndUserId(Long id, Long userId);
     Optional<TList> findByNameAndUserId(String listName, Long userId);
     List<TList> findTListsByUserId(Long userId);
+
 }
